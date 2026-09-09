@@ -2,11 +2,6 @@ import sys
 import json
 import datetime
 
-# Store the arguments passed to the script
-command_action = sys.argv[1]
-argument_1 = sys.argv[2]
-argument_2 = sys.argv[3] if len(sys.argv) > 3 else None
-
 # Function that create a new task
 def create_task(description):
     # Get the next available task ID
@@ -17,9 +12,9 @@ def create_task(description):
         {
             id: {
                 'description': description,
-                'status': "to-do",
+                'status': "todo",
                 'createdAt': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'updateAT': None
+                'updateAt': None
             }
         }
     )
@@ -78,23 +73,27 @@ def load_tasks():
     all_tasks = {int(key): value for key, value in all_tasks.items()}
 
 def main():
+    # Store the arguments passed to the script
+    command_action = sys.argv[1]
+
     # Call the function to load tasks from the JSON file
     load_tasks()
 
     if command_action == 'add':
-        description = argument_1
+        description = sys.argv[2]
         create_task(description)
 
     elif command_action == 'update':
-        id = int(argument_1)
-        description = argument_2 
+        id = int(sys.argv[2])
+        description = sys.argv[3]
         update_task(id, description)
 
     elif command_action == 'delete':
-        id = int(argument_1)
+        id = int(sys.argv[2])
         delete_task(id)
+
     elif command_action == 'make-in-progress' or command_action == 'make-done':
-        id = int(argument_1)
+        id = int(sys.argv[2])
 
         # Determine the new status based on the command action
         if command_action == 'make-in-progress':
@@ -103,7 +102,39 @@ def main():
             status = 'done'
         
         change_task_status(id, status)
-    else:
-        print('Invalid action. Please use "add" to create a new task.')
 
-main()       
+    elif command_action == 'list':
+        # Check if a filter argument is provided
+        if len(sys.argv) > 2:
+            # Filter the tasks based on the provided argument
+            if sys.argv[2] == 'done':
+                # Print the list of done tasks
+                print("List of done tasks:")
+                for id, value in all_tasks.items():
+                    if value['status'] == 'done':
+                        print(f"Task: {id} - {value['description']}")
+            elif sys.argv[2] == 'todo':
+                # Print the list of to-do tasks
+                print("List of to-do tasks:")
+                for id, value in all_tasks.items():
+                    if value['status'] == 'todo':
+                        print(f"Task: {id} - {value['description']}")
+            elif sys.argv[2] == 'in-progress':
+                # Print the list of in-progress tasks
+                print("List of in-progress tasks:")
+                for id, value in all_tasks.items():
+                    if value['status'] == 'in-progress':
+                        print(f"Task: {id} - {value['description']}")
+            else:
+                print('Invalid argument. Please use "done", "todo", or "in-progress" to filter tasks.')
+        elif len(sys.argv) == 2:
+            # Print the list of tasks
+            print("List of all tasks:")
+            for id, value in all_tasks.items():
+                print(f"Task: {id} - {value['description']}")
+        else:
+            print('Invalid action. Please use "list" to view tasks.')
+    else:
+        print('Invalid action. Please use "add", "update", "delete", "make-in-progress", or "make-done" to modify tasks.')
+
+main()
