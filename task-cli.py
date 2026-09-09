@@ -1,5 +1,6 @@
 import sys
 import json
+import datetime
 
 # Store the arguments passed to the script
 command_action = sys.argv[1]
@@ -17,6 +18,8 @@ def create_task(description):
             id: {
                 'description': description,
                 'status': "to-do",
+                'createdAt': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                'updateAT': None
             }
         }
     )
