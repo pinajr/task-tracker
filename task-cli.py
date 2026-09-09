@@ -50,6 +50,18 @@ def delete_task(id):
     else:
         print(f"Task with ID {id} not found.")
 
+# Function to change the status of a task
+def change_task_status(id, status):
+    load_tasks()  # Load the tasks from the JSON file
+
+    if id in all_tasks.keys():
+        all_tasks[id]['status'] = status
+        all_tasks[id]['updateAT'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        write_tasks_to_file()  # Call the function to write the updated tasks to the JSON file
+    else:
+        print(f"Task with ID {id} not found.")
+
 # Save the updated tasks to the JSON file
 def write_tasks_to_file():
     with open("tasks.json", "w", encoding="utf-8") as file:
@@ -81,6 +93,16 @@ def main():
     elif command_action == 'delete':
         id = int(argument_1)
         delete_task(id)
+    elif command_action == 'make-in-progress' or command_action == 'make-done':
+        id = int(argument_1)
+
+        # Determine the new status based on the command action
+        if command_action == 'make-in-progress':
+            status = 'in-progress'
+        else:
+            status = 'done'
+        
+        change_task_status(id, status)
     else:
         print('Invalid action. Please use "add" to create a new task.')
 
