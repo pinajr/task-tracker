@@ -108,7 +108,7 @@ def main():
                     'task ID and new description.'
                 )
                 return
-            elif sys.argv[2].isdigit() is False:
+            if sys.argv[2].isdigit() is False:
                 print('Invalid task ID. Please provide a valid integer ID.')
                 return
             
