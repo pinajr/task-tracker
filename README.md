@@ -4,6 +4,8 @@ A simple command-line task tracker built with Python. This project allows users 
 
 This project was built as a hands-on exercise to practice Python fundamentals, command-line interfaces, file handling, JSON persistence, and basic software organization.
 
+[View on GitHub](https://roadmap.sh/projects/task-tracker)
+
 ## Features
 
 - Add new tasks
